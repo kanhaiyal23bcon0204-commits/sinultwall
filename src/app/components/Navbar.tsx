@@ -2,19 +2,18 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, ChevronDown, Monitor, Smartphone } from "lucide-react";
+import { Menu, X, ChevronDown, Monitor, Smartphone, Tablet, Laptop } from "lucide-react";
 import { Logo } from "./Logo";
 import { cn } from "./ui/utils";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  // State for Desktop Categories dropdown
   const [categoryOpen, setCategoryOpen] = useState(false);
   
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Updated to close both menus on navigation
+  // Ye function dropdown band karke naye page par link karega
   const go = (path: string) => {
     setMobileOpen(false);
     setCategoryOpen(false);
@@ -39,28 +38,40 @@ export function Navbar() {
                 categoryOpen ? "bg-white/70 text-[var(--primary)]" : "text-[var(--secondary-foreground)] hover:bg-white/70"
               )}
             >
-              Categories
+              Device Categories
               <ChevronDown className={cn("h-4 w-4 transition-transform", categoryOpen && "rotate-180")} />
             </button>
 
-            {/* Animated Dropdown Menu */}
+            {/* 4 Categories Dropdown Menu */}
             <AnimatePresence>
               {categoryOpen && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute left-0 top-full mt-2 w-48 overflow-hidden rounded-2xl border border-white/50 bg-white/80 p-2 shadow-xl backdrop-blur-2xl"
+                  className="absolute left-0 top-full mt-2 w-52 overflow-hidden rounded-2xl border border-white/50 bg-white/80 p-2 shadow-xl backdrop-blur-2xl"
                 >
                   <button
-                    onClick={() => go("/?category=desktop")}
-                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium hover:bg-white/70 transition-colors"
+                    onClick={() => go("/desktop")}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium hover:bg-white/70 transition-colors"
                   >
                     <Monitor className="h-4 w-4" /> Desktop
                   </button>
                   <button
-                    onClick={() => go("/?category=mobile")}
-                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium hover:bg-white/70 transition-colors"
+                    onClick={() => go("/laptop")}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium hover:bg-white/70 transition-colors"
+                  >
+                    <Laptop className="h-4 w-4" /> Laptop
+                  </button>
+                  <button
+                    onClick={() => go("/tablet")}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium hover:bg-white/70 transition-colors"
+                  >
+                    <Tablet className="h-4 w-4" /> Tablet
+                  </button>
+                  <button
+                    onClick={() => go("/mobile")}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium hover:bg-white/70 transition-colors"
                   >
                     <Smartphone className="h-4 w-4" /> Mobile
                   </button>
@@ -97,20 +108,32 @@ export function Navbar() {
             </button>
             
             {/* Mobile Categories Section */}
-            <div className="mt-2 mb-1 px-4 text-xs font-semibold uppercase tracking-wider text-gray-500">
-              Categories
+            <div className="mt-4 mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-gray-500">
+              Device Categories
             </div>
             <button 
-              onClick={() => go("/?category=desktop")} 
+              onClick={() => go("/desktop")} 
               className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-medium hover:bg-[var(--secondary)] transition-colors"
             >
-              <Monitor className="h-5 w-5" /> Desktop Wallpapers
+              <Monitor className="h-5 w-5" /> Desktop
             </button>
             <button 
-              onClick={() => go("/?category=mobile")} 
+              onClick={() => go("/laptop")} 
               className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-medium hover:bg-[var(--secondary)] transition-colors"
             >
-              <Smartphone className="h-5 w-5" /> Mobile Wallpapers
+              <Laptop className="h-5 w-5" /> Laptop
+            </button>
+            <button 
+              onClick={() => go("/tablet")} 
+              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-medium hover:bg-[var(--secondary)] transition-colors"
+            >
+              <Tablet className="h-5 w-5" /> Tablet
+            </button>
+            <button 
+              onClick={() => go("/mobile")} 
+              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-medium hover:bg-[var(--secondary)] transition-colors"
+            >
+              <Smartphone className="h-5 w-5" /> Mobile
             </button>
           </motion.div>
         )}
