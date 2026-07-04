@@ -11,10 +11,9 @@ export function HomePage() {
   const [loading, setLoading] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState<DeviceType[]>([]);
   
-  // State to control how many wallpapers to show initially (Load More feature)
+  // Nayi state: Shuru me sirf 12 wallpapers dikhenge
   const [visibleCount, setVisibleCount] = useState(12);
 
-  // Hardcoded array so all 4 device buttons (including Tablet) ALWAYS appear
   const ALL_DEVICES: DeviceType[] = ["mobile", "laptop", "tablet", "desktop"];
 
   useEffect(() => {
@@ -25,7 +24,7 @@ export function HomePage() {
   }, []);
 
   const toggleFilter = (device: DeviceType) => {
-    // Reset to 12 wallpapers whenever a new filter is clicked
+    // Filter change hone par wapas sirf pehle 12 dikhayega
     setVisibleCount(12);
     setSelectedFilters(prev => 
       prev.includes(device) 
@@ -34,12 +33,12 @@ export function HomePage() {
     );
   };
 
-  // Filter wallpapers based on selected categories
   const displayedWallpapers = selectedFilters.length > 0
     ? allWallpapers.filter(w => selectedFilters.includes(w.device_type))
     : allWallpapers;
 
-  // Slice the array to only show the specified visible count
+  // IMPORTANT: Ye line array ko cut karti hai taaki grid ko utne hi wallpapers milein jitna visibleCount hai. 
+  // Isse automatic infinite scroll block ho jata hai.
   const visibleWallpapers = displayedWallpapers.slice(0, visibleCount);
 
   return (
@@ -69,10 +68,10 @@ export function HomePage() {
             })}
           </div>
 
-          {/* Pass the sliced visibleWallpapers to the grid instead of all of them */}
+          {/* Ab MasonryGrid ko sirf sliced array (visibleWallpapers) hi bhej rahe hain */}
           <MasonryGrid wallpapers={visibleWallpapers} loading={loading} />
 
-          {/* Load More Button */}
+          {/* Load More Button: Is par click karne par hi agle 12 wallpapers aayenge */}
           {!loading && visibleCount < displayedWallpapers.length && (
             <div className="mt-12 flex justify-center">
               <button
@@ -83,6 +82,7 @@ export function HomePage() {
               </button>
             </div>
           )}
+
         </div>
       </section>
     </PageTransition>
