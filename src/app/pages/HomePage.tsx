@@ -78,7 +78,7 @@ export function HomePage() {
                 onClick={() => setVisibleCount(prev => prev + 12)}
                 className="rounded-xl bg-black px-8 py-3 text-sm font-medium text-white transition-all hover:bg-gray-800 hover:shadow-lg active:scale-95"
               >
-                Load More Wallpapers
+                More 
               </button>
             </div>
           )}
