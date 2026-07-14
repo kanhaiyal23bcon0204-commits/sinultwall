@@ -22,7 +22,6 @@ export function AdminUpload() {
     const selected = e.target.files?.[0];
     if (selected) {
       setFile(selected);
-      // Photo ka local preview banane ke liye
       setPreview(URL.createObjectURL(selected));
     }
   };
@@ -41,39 +40,34 @@ export function AdminUpload() {
     const toastId = toast.loading("Uploading wallpaper...");
 
     try {
-      // 1. Ek unique file name banayenge taaki purani file overwrite na ho
       const fileExt = file.name.split(".").pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `public/${fileName}`;
 
-      // 2. Supabase Storage me photo upload karenge
       const { error: uploadError } = await supabase.storage
         .from("wallpapers")
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
-      // 3. Upload ki gayi photo ka Public URL nikalenge
       const { data: publicUrlData } = supabase.storage
         .from("wallpapers")
         .getPublicUrl(filePath);
 
       const imageUrl = publicUrlData.publicUrl;
-
-      // 4. URL aur baaki details Database me save karenge
       const tagsArray = tags.split(",").map(t => t.trim()).filter(Boolean);
       
       await dataService.createWallpaper({
         title,
         image_url: imageUrl,
         device_type: deviceType,
-        resolution: "HD", // Isko baad me image read karke dynamic kar sakte hain
+        resolution: "HD",
         tags: tagsArray,
         is_trending: false
       });
 
       toast.success("Wallpaper uploaded successfully!", { id: toastId });
-      navigate("/admin/dashboard"); // Upload ke baad wapas dashboard
+      navigate("/admin/dashboard");
     } catch (error: any) {
       console.error("Upload failed:", error);
       toast.error(error.message || "Failed to upload image", { id: toastId });
@@ -122,12 +116,13 @@ export function AdminUpload() {
                 <p className="mt-1 text-xs text-gray-500">PNG, JPG or WEBP (Max 5MB)</p>
               </div>
             ) : (
-              <div className="relative overflow-hidden rounded-2xl border border-gray-200">
-                <img src={preview} alt="Preview" className="h-[300px] w-full object-cover" />
+              <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-black/5 flex items-center justify-center p-2">
+                {/* Fixed: Removed fixed h-[300px] and used max-h-[500px] object-contain */}
+                <img src={preview} alt="Preview" className="max-h-[500px] w-auto max-w-full object-contain rounded-xl" />
                 <button
                   type="button"
                   onClick={clearFile}
-                  className="absolute right-4 top-4 rounded-full bg-black/50 p-2 text-white backdrop-blur-md transition-colors hover:bg-black/70"
+                  className="absolute right-4 top-4 rounded-full bg-black/60 p-2 text-white backdrop-blur-md transition-colors hover:bg-black"
                 >
                   <X className="h-5 w-5" />
                 </button>

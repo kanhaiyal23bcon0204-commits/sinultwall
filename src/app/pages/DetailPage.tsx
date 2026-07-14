@@ -34,7 +34,6 @@ export function DetailPage() {
         return;
       }
       setWallpaper(w);
-      // Sirf real similar wallpapers fetch honge
       dataService.getSimilar(w).then(setSimilar);
       setLoading(false);
     });
@@ -88,34 +87,43 @@ export function DetailPage() {
             <ArrowLeft className="h-4 w-4" /> Back
           </button>
 
-          <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
+          {/* Changed lg:grid-cols-[1.4fr_1fr] to dynamic flex/grid to allow auto-sizing */}
+          <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
+            
+            {/* The Image Container */}
             <motion.div
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative overflow-hidden rounded-[2rem] border border-white/60 bg-white shadow-[0_40px_90px_-40px_rgba(80,60,160,0.7)]"
+              // 1. Added 'inline-flex' and 'w-auto' so the box hugs the image.
+              // 2. Added mx-auto so it centers on smaller screens.
+              className="group relative overflow-hidden rounded-[2rem] border border-white/60 bg-black/5 shadow-[0_40px_90px_-40px_rgba(80,60,160,0.7)] inline-flex justify-center p-2 mx-auto lg:mx-0 w-auto"
             >
               <img
                 src={wallpaper.image_url}
                 alt={wallpaper.title}
                 loading="lazy"
-                className="h-full max-h-[72vh] w-full object-cover"
+                // object-contain keeps the ratio correct inside the hugging container
+                className="max-h-[75vh] w-auto object-contain rounded-[1.5rem]"
               />
               <a
                 href={wallpaper.image_url}
                 target="_blank"
                 rel="noreferrer"
-                className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-xl bg-white/80 text-[var(--foreground)] opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100"
+                className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-xl bg-black/50 text-white opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100"
                 aria-label="Open full size"
               >
                 <Maximize2 className="h-4 w-4" />
               </a>
             </motion.div>
 
+            {/* The Details Container */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
+              // Added flex-1 so the details take up the remaining space on desktop, max-w-xl to keep it looking neat
+              className="flex-1 w-full max-w-xl mx-auto lg:mx-0"
             >
               <GlassPanel className="p-7">
                 {wallpaper.is_trending && (
